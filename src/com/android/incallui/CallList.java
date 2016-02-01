@@ -21,6 +21,9 @@ import android.os.Message;
 import android.os.Trace;
 import android.telecom.DisconnectCause;
 import android.telecom.PhoneAccount;
+import android.telecom.PhoneAccountHandle;
+import android.telephony.SubscriptionManager;
+import android.text.TextUtils;
 
 import com.android.contacts.common.testing.NeededForTesting;
 import com.google.common.base.Preconditions;
@@ -652,5 +655,14 @@ public class CallList {
          * Notifies of a change to the child number for a call.
          */
         public void onChildNumberChange();
+    }
+
+     public Call getCallWithStateAndNumber(int state, String number) {
+         for (Call call : mCallById.values()) {
+             if (TextUtils.equals(call.getNumber(), number) && call.getState() == state) {
+                 return call;
+             }
+         }
+         return null;
     }
 }
