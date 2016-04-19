@@ -871,12 +871,14 @@ public class InCallActivity extends Activity implements FragmentDisplayManager {
         int taskId = getTaskId();
         for (int i=0; i<tasks.size(); i++) {
             ActivityManager.AppTask task = tasks.get(i);
-            if (task.getTaskInfo().id == taskId) {
-                try {
+            try {
+                if (task.getTaskInfo().id == taskId) {
                     task.setExcludeFromRecents(exclude);
-                } catch (RuntimeException e) {
-                    Log.e(TAG, "RuntimeException when excluding task from recents.", e);
                 }
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "IllegalArgumentException when getting task info from recents.", e);
+            } catch (RuntimeException e) {
+                Log.e(TAG, "RuntimeException when excluding task from recents.", e);
             }
         }
     }
