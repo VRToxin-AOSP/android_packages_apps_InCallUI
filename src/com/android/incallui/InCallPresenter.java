@@ -124,6 +124,12 @@ public class InCallPresenter implements CallList.Listener,
         @Override
         public void onPostDialWait(android.telecom.Call telecomCall,
                 String remainingPostDialSequence) {
+            // By the time we receive this intent, we could be shut down and call list
+            // could be null.  Bail in those cases.
+            if (mCallList == null) {
+                Log.e(this, " onPostDialWait mCallList is empty so returning");
+                return;
+            }
             final Call call = mCallList.getCallByTelecommCall(telecomCall);
             if (call == null) {
                 Log.w(this, "Call not found in call list: " + telecomCall);
@@ -135,6 +141,12 @@ public class InCallPresenter implements CallList.Listener,
         @Override
         public void onDetailsChanged(android.telecom.Call telecomCall,
                 android.telecom.Call.Details details) {
+            // By the time we receive this intent, we could be shut down and call list
+            // could be null.  Bail in those cases.
+            if (mCallList == null) {
+                Log.e(this, " onPostDialWait mCallList is empty so returning");
+                return;
+            }
             final Call call = mCallList.getCallByTelecommCall(telecomCall);
             if (call == null) {
                 Log.w(this, "Call not found in call list: " + telecomCall);
@@ -1522,6 +1534,13 @@ public class InCallPresenter implements CallList.Listener,
      * and a secondary color.
      */
     public void setThemeColors() {
+        // By the time we receive this intent, we could be shut down and call list
+        // could be null.  Bail in those cases.
+        if (mCallList == null) {
+            Log.e(this, " setThemeColors mCallList is empty so returning");
+            return;
+        }
+
         // This method will set the background to default if the color is PhoneAccount.NO_COLOR.
         mThemeColors = getColorsFromCall(mCallList.getFirstCall());
 
