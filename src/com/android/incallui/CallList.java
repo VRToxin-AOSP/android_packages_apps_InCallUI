@@ -340,6 +340,9 @@ public class CallList {
         if (result == null) {
             result = getDisconnectedCall();
         }
+        if (result == null) {
+            result = getFirstCallWithState(Call.State.ONHOLD);
+        }
         return result;
     }
 
