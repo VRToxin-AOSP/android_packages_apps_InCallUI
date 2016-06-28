@@ -314,7 +314,6 @@ public class InCallActivity extends Activity implements FragmentDisplayManager {
     protected void onStop() {
         Log.d(this, "onStop()...");
         mIsVisible = false;
-        InCallPresenter.getInstance().updateNotification();
         InCallPresenter.getInstance().updateIsChangingConfigurations();
         InCallPresenter.getInstance().onActivityStopped();
         mOrientationEventListener.disable();
