@@ -57,6 +57,11 @@ public class StatusBarNotifier implements InCallPresenter.InCallStateListener,
     // Notification for incoming calls. This is interruptive and will show up as a HUN.
     private static final int NOTIFICATION_INCOMING_CALL = 2;
 
+    private static final String ACTION_ONGOING_CALL =
+            "com.android.systemui.ACTION_ONGOING_CALL";
+
+    private static final String EXTRA_ONGOING_CALL_SHOW = "show";
+
     private final Context mContext;
     private final ContactInfoCache mContactInfoCache;
     private final NotificationManager mNotificationManager;
@@ -259,9 +264,11 @@ public class StatusBarNotifier implements InCallPresenter.InCallStateListener,
         builder.setLargeIcon(largeIcon);
         builder.setColor(mContext.getResources().getColor(R.color.dialer_theme_color));
 
-        if (state == Call.State.ONHOLD
-                || state == Call.State.ACTIVE
-                || state == Call.State.DIALING) {
+        if (state == Call.State.ONHOLD) {
+            moveToBackgroundNotification(mContext, true);
+        } else if (state == Call.State.ACTIVE) {
+            moveToBackgroundNotification(mContext, true);
+        } else if (state == Call.State.DIALING) {
             moveToBackgroundNotification(mContext, true);
         }
 
@@ -678,15 +685,15 @@ public class StatusBarNotifier implements InCallPresenter.InCallStateListener,
     }
 
    /**
-     * Send broadcast Intent {@link TelecomManager#ACTION_ONGOING_CALL}
+     * Send broadcast Intent "com.android.systemui.ACTION_ONGOING_CALL"
      * for showing the green animation of statusbar.
      *
      * @param context The context.
      * @param show The flag whether to show.
      */
     private static void moveToBackgroundNotification(Context context, boolean show) {
-        Intent intent = new Intent(TelecomManager.ACTION_ONGOING_CALL)
-                .putExtra(TelecomManager.EXTRA_ONGOING_CALL_SHOW, show);
+        Intent intent = new Intent(ACTION_ONGOING_CALL);
+        intent.putExtra(EXTRA_ONGOING_CALL_SHOW, show);
         context.sendBroadcast(intent);
     }
 }
